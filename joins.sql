@@ -52,4 +52,26 @@
 
 -- Obtener las categorias de peliculas y las ganancias de rentas de peliculas para cada categoria. Agrupar por categoria y ordenar por suma de categorias de mayor a menor
 
--- 
+-- Obtener el id de los clientes, el id de la tienda y la cantidad de dinero gastado en cada tienda
+
+-- Obtener la cantidad de clientes por pais
+
+-- Obtener el nombre y apellido de cada cliente, la cantidad de rentas que realizo y la cantidad de dinero gastado. Agrupar por nombre y ordenar por cantidad de rentas
+
+-- Obtener la cantidad de alquileres por tienda
+
+-- Obtener las ganancias por tienda
+
+-- Obtener cantidad de clientes que visitaron cada tienda
+
+-- Obtener el pais y la cantidad de clientes por pais en orden descendente
+
+-- Obtener las ventas por mes para todo el periodo. Monto total para cada mes del periodo que se tenga datos. Ordenrar por recaudacion de mayor a menor
+
+-- Obtener las categorias de peliculas, la cantidad de rentas por categoria, las ganancias por categoria y el porcentaje que representa lo recaudado por categoria respecto de la recaudacion total. Ordenar por ganancia de mayor a menor
+
+-- Obtener las categorias de peliculas, la cantidad de rentas por categoria y el porcentaje de rentas para cada categoria con respecto de la cantidad maxima de rentas. Ordenar por cantidad de rentas de mayor a menor
+
+-- Identificar los 3 actores cuyas peliculas son las mas alquiladas en cantidad de rentas y recaudacion lograda
+
+-- Obtener el top 6 de clientes que mas dinero gastaron
