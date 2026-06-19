@@ -78,16 +78,44 @@ ORDER BY amount DESC;
 
 -- Obtener los nombres de los clientes y la cantidad de dinero gastado en ambas tiendas
 
-
 -- Obtener la direccion de cada tienda
+SELECT store.store_id, address.address
+FROM store
+LEFT JOIN address
+ON store.address_id = address.address_id;
 
 -- Obtener el nombre, apellido y direccion de cada cliente
+SELECT customer.first_name as name, customer.last_name as surname, address.address
+FROM customer
+LEFT JOIN address
+ON customer.address_id = address.address_id;
 
 -- Obtener el nombre y apellido del cliente que vive en la ciudad "Apeldoorn"
+SELECT customer.first_name as name, customer.last_name as surname
+FROM customer
+INNER JOIN address
+ON customer.address_id = address.address_id
+INNER JOIN city
+ON address.city_id = city.city_id
+WHERE city.city = 'Apeldoorn';
 
 -- Obtener la categoria de la pelicula "Arabia Dogma"
+SELECT category.name
+FROM category
+INNER JOIN film_category
+ON category.category_id = film_category.category_id
+INNER JOIN film
+ON film_category.film_id = film.film_id
+WHERE film.title = 'Arabia Dogma';
 
 -- Obtener el nombre y apellido de los actores que participaron en la pelicula "Interview Liaisons"
+SELECT actor.first_name, actor.last_name
+FROM actor
+INNER JOIN film_actor
+ON actor.actor_id = film_actor.actor_id
+INNER JOIN film
+ON film_actor.film_id = film.film_id
+WHERE film.title = 'Interview Liaisons';
 
 -- Obtener el nombre del miembro del staff que le rento una copia de la pelicula "Hunchback Imposible" al cliente "Kurt Emmons"
 
