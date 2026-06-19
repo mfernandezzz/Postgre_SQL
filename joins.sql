@@ -1,20 +1,83 @@
 -- Obtener las categorias de peliculas y sus ganancias
+SELECT category.name as category, sum(payment.amount) as amount
+FROM category
+LEFT JOIN film_category
+ON category.category_id = film_category.category_id
+LEFT JOIN inventory
+ON film_category.film_id = inventory.film_id
+LEFT JOIN rental
+ON inventory.inventory_id = rental.inventory_id
+LEFT JOIN payment
+ON rental.rental_id = payment.rental_id
+GROUP BY category
+ORDER BY amount DESC;
 
 -- Obtener la cantidad de rentas por categoria de pelicula
+SELECT category.name as category, count(rental.rental_id) as rentals
+FROM rental
+LEFT JOIN inventory
+ON rental.inventory_id = inventory.inventory_id
+LEFT JOIN film_category
+ON inventory.film_id = film_category.film_id
+LEFT JOIN category
+ON film_category.category_id = category.category_id
+GROUP BY category
+ORDER BY rentals DESC;
 
 -- Obtener los idiomas y la cantidad de clientes que alquilaron peliculas para cada idioma
+SELECT name as language, count(customer.customer_id) as customers
+FROM language
+LEFT JOIN film
+ON language.language_id = film.language_id
+LEFT JOIN inventory
+ON film.film_id = inventory.film_id
+LEFT JOIN rental
+ON inventory.inventory_id = rental.inventory_id
+LEFT JOIN customer
+ON rental.customer_id = customer.customer_id
+GROUP BY language
+ORDER BY customers DESC;
 
 -- Obtener la cantidad de clientes por pais
+SELECT country as country, count(customer.customer_id) as count
+FROM country
+LEFT JOIN city
+ON country.country_id = city.country_id
+LEFT JOIN address
+ON city.city_id = address.city_id
+LEFT JOIN customer
+ON address.address_id = customer.address_id
+GROUP BY country
+ORDER BY count DESC;
 
 -- Obtener los clientes, la cantidad de rentas y la cantidad de dinero gastado
+SELECT customer.first_name as name, customer.last_name as surname, count(rental.rental_id) as rentals, sum(payment.amount) as payment
+FROM customer
+LEFT JOIN rental
+ON customer.customer_id = rental.customer_id
+LEFT JOIN payment
+ON rental.rental_id = payment.rental_id
+GROUP BY name, surname
+ORDER BY payment DESC;
 
 -- Obtener la renta mas alta para cada tienda
+SELECT MAX(payment.amount) as amount, store.store_id as store_id, staff.first_name as name, staff.last_name as surname
+FROM payment
+LEFT JOIN rental
+ON payment.rental_id = rental.rental_id
+LEFT JOIN staff
+ON rental.staff_id = staff.staff_id
+LEFT JOIN store
+ON staff.store_id = store.store_id
+GROUP BY store.store_id, name, surname
+ORDER BY amount DESC;
 
 -- Obtener el promedio de renta por tienda
 
 -- Obtener las 10 rentas mas caras por tienda
 
 -- Obtener los nombres de los clientes y la cantidad de dinero gastado en ambas tiendas
+
 
 -- Obtener la direccion de cada tienda
 
