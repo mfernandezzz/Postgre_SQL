@@ -120,18 +120,52 @@ WHERE film.title = 'Interview Liaisons';
 -- Obtener el nombre del miembro del staff que le rento una copia de la pelicula "Hunchback Imposible" al cliente "Kurt Emmons"
 
 -- Obtener cantidad de veces que el cliente "Vivian Ruiz" rento peliculas
+SELECT count(rental.rental_id) as rentals
+FROM rental
+LEFT JOIN customer
+ON rental.customer_id = customer.customer_id
+WHERE customer.first_name = 'Vivian' and customer.last_name = 'Ruiz';
 
 -- Obtener la cantidad de peliculas disponibles en ambas tiendas
 
 -- Obtener todas las ciudades con su pais respectivo
+SELECT city.city as city, country.country as country
+FROM city
+INNER JOIN country
+ON city.country_id = country.country_id;
 
 -- Obtener los clientes y el monto total de sus pagos realizados en orden descendente
+SELECT customer.first_name as name, customer.last_name as surname, sum(amount) as amount
+FROM customer
+LEFT JOIN payment
+ON customer.customer_id = payment.customer_id
+GROUP BY name, surname
+ORDER BY amount DESC;
 
 -- Obtener las categorias y la cantidad de peliculas para cada categoria
+SELECT category.name as category, count(film.film_id) as count
+FROM category
+LEFT JOIN film_category
+ON category.category_id = film_category.category_id
+LEFT JOIN film
+ON film_category.film_id = film.film_id
+GROUP BY category
+ORDER BY count desc;
 
--- Obtener el id de los vendedores, su direccion y su primer nombre
+-- Obtener el id de los vendedores, su primer nombre y su direccion
+SELECT staff.staff_id, staff.first_name, address.address
+FROM staff
+LEFT JOIN address
+ON staff.address_id = address.address_id;
 
--- Obtener los nombres de las peliculas donde actuo el actor "Nick Walhberg"
+-- Obtener los nombres de las peliculas donde actuo el actor "Nick Wahlberg"
+SELECT film.title as film
+FROM film
+LEFT JOIN film_actor
+ON film.film_id = film_actor.film_id
+LEFT JOIN actor
+ON film_actor.actor_id = actor.actor_id
+WHERE actor.first_name = 'Nick' and actor.last_name = 'Wahlberg';
 
 -- Obtener el id de cada alquiler, el id de la tienda y la direccion de la tienda donde se realizo ese alquiler
 
