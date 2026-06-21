@@ -249,11 +249,18 @@ GROUP BY name, last_name
 ORDER BY amount DESC
 LIMIT 6;
 
--- Obtener el promedio de renta por tienda
-
 -- Obtener las 10 rentas mas caras por tienda
+SELECT payment.rental_id as rental_id, payment.amount as amount
+FROM payment
+LEFT JOIN staff
+ON payment.staff_id = staff.staff_id
+WHERE staff.store_id = 1 --2
+GROUP BY payment.rental_id, payment.amount, staff.store_id
+ORDER BY amount DESC
+LIMIT 10;
 
 -- Obtener los nombres de los clientes y la cantidad de dinero gastado en ambas tiendas
+-- Obtener el id de los clientes, el id de la tienda y la cantidad de dinero gastado en cada tienda
 
 -- Obtener el nombre del miembro del staff que le rento una copia de la pelicula "Hunchback Imposible" al cliente "Kurt Emmons"
 
@@ -267,16 +274,40 @@ ON address.address_id = store.address_id
 GROUP BY customer_id, address.address, store.store_id
 ORDER BY customer_id ASC;
 
--- Obtener las categorias de peliculas y la cantidad de veces que se rentaron peliculas para cada categoria. Agrupar por nombre de categoria y ordenar por cantidad de rentas de mayor a menor
-
--- Obtener las categorias de peliculas y las ganancias de rentas de peliculas para cada categoria. Agrupar por categoria y ordenar por suma de categorias de mayor a menor
-
--- Obtener el id de los clientes, el id de la tienda y la cantidad de dinero gastado en cada tienda
-
--- Obtener el nombre y apellido de cada cliente, la cantidad de rentas que realizo y la cantidad de dinero gastado. Agrupar por nombre y ordenar por cantidad de rentas
+-- Obtener el nombre y apellido de cada cliente, la cantidad de rentas que realizo y la cantidad de dinero gastado
+SELECT customer.first_name as name, customer.last_name as last_name, count(rental.rental_id) as rentals, sum(payment.amount) as amount
+FROM customer
+LEFT JOIN rental
+ON customer.customer_id = rental.customer_id
+LEFT JOIN payment
+ON rental.rental_id = payment.rental_id
+GROUP BY name, last_name
+ORDER BY rentals DESC;
 
 -- Obtener las ventas por mes para todo el periodo. Monto total para cada mes del periodo que se tenga datos. Ordenar por recaudacion de mayor a menor
+SELECT rental_date
+FROM rental
+ORDER BY rental_date DESC --ASC
+LIMIT 1; --primero se obtiene la fecha inicial y la fecha final del periodo que se quiera evaluar
 
--- Obtener las categorias de peliculas, la cantidad de rentas por categoria, las ganancias por categoria y el porcentaje que representa lo recaudado por categoria respecto de la recaudacion total. Ordenar por ganancia de mayor a menor
+SELECT to_char(rental.rental_date, 'YYYY-MM') as month, sum(payment.amount) as profit
+FROM rental
+INNER JOIN payment
+ON rental.rental_id = payment.rental_id
+WHERE rental.rental_date BETWEEN '2005-05-24' and '2006-03-14' --el rango de fechas debe incluir un mes mas con respecto a la fecha final
+GROUP BY month
+ORDER BY profit DESC;
 
--- Obtener las categorias de peliculas, la cantidad de rentas por categoria y el porcentaje de rentas para cada categoria con respecto de la cantidad maxima de rentas. Ordenar por cantidad de rentas de mayor a menor
+-- Obtener las categorias de peliculas, la cantidad de rentas por categoria y las ganancias por categoria
+SELECT category.name as category, count(rental.rental_id) as rentals, sum(payment.amount) as amount
+FROM category
+LEFT JOIN film_category
+ON category.category_id = film_category.category_id
+LEFT JOIN inventory
+ON film_category.film_id = inventory.film_id
+LEFT JOIN rental
+ON inventory.inventory_id = rental.inventory_id
+LEFT JOIN payment
+ON rental.rental_id = payment.rental_id
+GROUP BY category
+ORDER BY amount DESC;
