@@ -72,12 +72,6 @@ ON staff.store_id = store.store_id
 GROUP BY store.store_id, name, surname
 ORDER BY amount DESC;
 
--- Obtener el promedio de renta por tienda
-
--- Obtener las 10 rentas mas caras por tienda
-
--- Obtener los nombres de los clientes y la cantidad de dinero gastado en ambas tiendas
-
 -- Obtener la direccion de cada tienda
 SELECT store.store_id, address.address
 FROM store
@@ -117,8 +111,6 @@ INNER JOIN film
 ON film_actor.film_id = film.film_id
 WHERE film.title = 'Interview Liaisons';
 
--- Obtener el nombre del miembro del staff que le rento una copia de la pelicula "Hunchback Imposible" al cliente "Kurt Emmons"
-
 -- Obtener cantidad de veces que el cliente "Vivian Ruiz" rento peliculas
 SELECT count(rental.rental_id) as rentals
 FROM rental
@@ -127,6 +119,13 @@ ON rental.customer_id = customer.customer_id
 WHERE customer.first_name = 'Vivian' and customer.last_name = 'Ruiz';
 
 -- Obtener la cantidad de peliculas disponibles en ambas tiendas
+SELECT store.store_id as store_id, count(film.film_id)
+FROM store
+LEFT JOIN inventory
+ON store.store_id = inventory.store_id
+LEFT JOIN film
+ON inventory.film_id = film.film_id
+GROUP BY store.store_id; --la cantidad total de peliculas es 1000, en el inventario se encuentra una cantidad mayor de peliculas debido a que existe mas de una copia por pelicula
 
 -- Obtener todas las ciudades con su pais respectivo
 SELECT city.city as city, country.country as country
@@ -168,10 +167,105 @@ ON film_actor.actor_id = actor.actor_id
 WHERE actor.first_name = 'Nick' and actor.last_name = 'Wahlberg';
 
 -- Obtener el id de cada alquiler, el id de la tienda y la direccion de la tienda donde se realizo ese alquiler
+SELECT rental.rental_id as rental_id, store.store_id as store_id, address.address as address
+FROM rental
+INNER JOIN staff
+ON rental.staff_id = staff.staff_id
+INNER JOIN store
+ON staff.store_id = store.store_id
+INNER JOIN address
+ON store.address_id = address.address_id
+GROUP BY rental.rental_id, store.store_id, address.address;
 
 -- Obtener la pelicula mas alquilada
+SELECT film.title as title, count(rental.rental_id) as rentals
+FROM film
+LEFT JOIN inventory
+ON film.film_id = inventory.film_id
+LEFT JOIN rental
+ON inventory.inventory_id = rental.inventory_id
+GROUP BY title
+ORDER BY rentals DESC;
+LIMIT 1;
+
+-- Obtener la cantidad de clientes por pais
+SELECT country.country as country, count(customer.customer_id) as customers
+FROM country
+LEFT JOIN city
+ON country.country_id = city.country_id
+LEFT JOIN address
+ON city.city_id = address.city_id
+LEFT JOIN customer
+ON address.address_id = customer.address_id
+GROUP BY country
+ORDER BY customers DESC;
+
+-- Obtener la cantidad de alquileres por tienda
+SELECT store.store_id as store_id, count(rental.rental_id) as rentals
+FROM store
+LEFT JOIN staff
+ON store.store_id = staff.store_id
+LEFT JOIN rental
+ON staff.staff_id = rental.staff_id
+GROUP BY store.store_id;
+
+-- Obtener las ganancias por tienda
+SELECT store.store_id as store_id, sum(payment.amount) as profit
+FROM store
+INNER JOIN staff
+ON store.store_id = staff.store_id
+INNER JOIN payment
+ON staff.staff_id = payment.staff_id
+GROUP BY store.store_id;
+
+-- Obtener cantidad de clientes que visitaron cada tienda
+SELECT store.store_id as store_id, count(customer.customer_id) as clients
+FROM store
+LEFT JOIN customer
+ON store.store_id = customer.store_id
+GROUP BY store.store_id;
+
+-- Identificar los 3 actores cuyas peliculas son las mas alquiladas en cantidad de rentas y recaudacion lograda
+SELECT actor.first_name as name, actor.last_name as last_name, count(rental.rental_id) as rentals, sum(payment.amount) as amount
+FROM actor
+LEFT JOIN film_actor
+ON actor.actor_id = film_actor.actor_id
+LEFT JOIN inventory
+ON film_actor.film_id = inventory.film_id
+LEFT JOIN rental
+ON inventory.inventory_id = rental.inventory_id
+LEFT JOIN payment
+ON rental.rental_id = payment.rental_id
+GROUP BY name, last_name
+ORDER BY rentals DESC
+LIMIT 3;
+
+-- Obtener el top 6 de clientes que mas dinero gastaron
+SELECT customer.first_name as name, customer.last_name as last_name, sum(payment.amount) as amount
+FROM customer
+LEFT JOIN payment
+ON customer.customer_id = payment.customer_id
+GROUP BY name, last_name
+ORDER BY amount DESC
+LIMIT 6;
+
+-- Obtener el promedio de renta por tienda
+
+-- Obtener las 10 rentas mas caras por tienda
+
+-- Obtener los nombres de los clientes y la cantidad de dinero gastado en ambas tiendas
+
+-- Obtener el nombre del miembro del staff que le rento una copia de la pelicula "Hunchback Imposible" al cliente "Kurt Emmons"
 
 -- Obtener el id de cada cliente, la direccion y el id de la tienda a la que accedio
+SELECT customer.customer_id as customer_id, address.address as address, customer.store_id
+FROM customer
+LEFT JOIN address
+ON customer.address_id = address.address_id
+LEFT JOIN store
+ON address.address_id = store.address_id
+GROUP BY customer_id, address.address, store.store_id
+ORDER BY customer_id ASC;
 
 -- Obtener las categorias de peliculas y la cantidad de veces que se rentaron peliculas para cada categoria. Agrupar por nombre de categoria y ordenar por cantidad de rentas de mayor a menor
 
@@ -179,24 +273,10 @@ WHERE actor.first_name = 'Nick' and actor.last_name = 'Wahlberg';
 
 -- Obtener el id de los clientes, el id de la tienda y la cantidad de dinero gastado en cada tienda
 
--- Obtener la cantidad de clientes por pais
-
 -- Obtener el nombre y apellido de cada cliente, la cantidad de rentas que realizo y la cantidad de dinero gastado. Agrupar por nombre y ordenar por cantidad de rentas
 
--- Obtener la cantidad de alquileres por tienda
-
--- Obtener las ganancias por tienda
-
--- Obtener cantidad de clientes que visitaron cada tienda
-
--- Obtener el pais y la cantidad de clientes por pais en orden descendente
-
--- Obtener las ventas por mes para todo el periodo. Monto total para cada mes del periodo que se tenga datos. Ordenrar por recaudacion de mayor a menor
+-- Obtener las ventas por mes para todo el periodo. Monto total para cada mes del periodo que se tenga datos. Ordenar por recaudacion de mayor a menor
 
 -- Obtener las categorias de peliculas, la cantidad de rentas por categoria, las ganancias por categoria y el porcentaje que representa lo recaudado por categoria respecto de la recaudacion total. Ordenar por ganancia de mayor a menor
 
 -- Obtener las categorias de peliculas, la cantidad de rentas por categoria y el porcentaje de rentas para cada categoria con respecto de la cantidad maxima de rentas. Ordenar por cantidad de rentas de mayor a menor
-
--- Identificar los 3 actores cuyas peliculas son las mas alquiladas en cantidad de rentas y recaudacion lograda
-
--- Obtener el top 6 de clientes que mas dinero gastaron
