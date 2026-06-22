@@ -259,10 +259,21 @@ GROUP BY payment.rental_id, payment.amount, staff.store_id
 ORDER BY amount DESC
 LIMIT 10;
 
--- Obtener los nombres de los clientes y la cantidad de dinero gastado en ambas tiendas
 -- Obtener el id de los clientes, el id de la tienda y la cantidad de dinero gastado en cada tienda
+SELECT customer.customer_id as customer, customer.store_id as store, sum(payment.amount) as amount
+FROM customer
+INNER JOIN payment
+ON customer.customer_id = payment.customer_id
+GROUP BY customer, store;
 
--- Obtener el nombre del miembro del staff que le rento una copia de la pelicula "Hunchback Imposible" al cliente "Kurt Emmons"
+-- Obtener el nombre del miembro del staff que le rento una copia de la pelicula "Hunchback Impossible" al cliente "Kurt Emmons"
+SELECT staff.first_name as name, staff.last_name as surname
+FROM staff
+LEFT JOIN rental
+ON staff.staff_id = rental.staff_id
+LEFT JOIN inventory
+ON rental.inventory_id = inventory.inventory_id
+WHERE inventory.film_id = 439 and rental.customer_id = 547; --previamente se obtiene el id de la pelicula y el id del cliente
 
 -- Obtener el id de cada cliente, la direccion y el id de la tienda a la que accedio
 SELECT customer.customer_id as customer_id, address.address as address, customer.store_id
