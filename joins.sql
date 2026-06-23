@@ -1,3 +1,16 @@
+-- Obtener todos los clientes de los que recibio pagos el miembro del staff con id=1
+SELECT DISTINCT customer.first_name, customer.last_name
+FROM customer
+LEFT JOIN payment
+ON customer.customer_id = payment.customer_id
+WHERE payment.staff_id = 2;
+--para verificar esta query, se obtiene el id de cada miembro del staff y la cantidad de clientes de los que recibio pagos
+SELECT payment.staff_id AS staffM, COUNT(DISTINCT customer.customer_id) AS clients
+FROM payment
+LEFT JOIN customer
+ON payment.customer_id = customer.customer_id
+GROUP BY staffM;
+
 -- Obtener las categorias de peliculas y sus ganancias
 SELECT category.name as category, sum(payment.amount) as amount
 FROM category
@@ -185,7 +198,7 @@ ON film.film_id = inventory.film_id
 LEFT JOIN rental
 ON inventory.inventory_id = rental.inventory_id
 GROUP BY title
-ORDER BY rentals DESC;
+ORDER BY rentals DESC
 LIMIT 1;
 
 -- Obtener la cantidad de clientes por pais
