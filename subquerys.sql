@@ -57,10 +57,41 @@ WHERE country_id in (
 	WHERE country_id = 10
 );
 
--- Obtener el id de todos los clientes que han visto peliculas en japones
-
 -- Obtener la cantidad de rentas que se hicieron para las peliculas de categoria "Sci-Fi"
+SELECT count(rental.rental_id)
+FROM rental
+LEFT JOIN inventory
+ON rental.inventory_id = inventory.inventory_id
+LEFT JOIN film_category
+ON inventory.film_id = film_category.film_id
+WHERE film_category.category_id in (
+	SELECT category.category_id
+	FROM category
+	WHERE category.name = 'Sci-Fi'
+);
 
 -- Obtener las ganancias que obtuvo la categoria de pelicula "Foreign"
+SELECT SUM(payment.amount)
+FROM payment
+LEFT JOIN rental
+ON payment.rental_id = rental.rental_id
+LEFT JOIN inventory
+ON rental.inventory_id = inventory.inventory_id
+LEFT JOIN film_category
+ON inventory.film_id = film_category.film_id
+WHERE film_category.category_id IN (
+	SELECT category_id
+	FROM category
+	WHERE category.name = 'Foreign'
+);
 
 -- Mostrar los nombres de las peliculas en las que actuo el actor "Nick Wahlberg"
+SELECT film.title
+FROM film
+LEFT JOIN film_actor
+ON film.film_id = film_actor.film_id
+WHERE film_actor.actor_id IN (
+	SELECT actor_id
+	FROM actor
+	WHERE actor.first_name = 'Nick' and actor.last_name = 'Wahlberg'
+);
