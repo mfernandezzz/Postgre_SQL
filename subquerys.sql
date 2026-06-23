@@ -1,7 +1,16 @@
--- ¿Cual es la categoria de la pelicula "Arabia Dogma"?
+-- Obtener la categoria de la pelicula 'Arabia Dogma'
+SELECT name
+FROM category
+LEFT JOIN film_category
+ON category.category_id = film_category.category_id
+WHERE film_id IN (
+	SELECT film_id
+	FROM film
+	WHERE film.title = 'Arabia Dogma'
+);
 
 -- Obtener todos los nombres de peliculas donde hayan participado los actores que participaron en la pelicula con id=14
-SELECT film.title
+SELECT film.title AS title
 FROM film
 LEFT JOIN film_actor
 ON film.film_id = film_actor.film_id
@@ -22,9 +31,6 @@ FROM film_actor
 LEFT JOIN actor
 ON film_actor.actor_id = actor.actor_id
 WHERE actor.first_name = 'Rock' and actor.last_name = 'Dukakis';
-
-
--- Obtener todos los clientes de los que recibio pagos el miembro del staff con id=1
 
 -- Obtener todas las peliculas con categoria "Action"
 SELECT film.title AS title
