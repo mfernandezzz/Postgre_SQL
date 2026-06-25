@@ -101,9 +101,3 @@ WHERE film_actor.actor_id IN (
 	FROM actor
 	WHERE actor.first_name = 'Nick' and actor.last_name = 'Wahlberg'
 );
-
--- Seleccionar los clientes que hayan realizado pagos mayores al AVG de los pagos totales
-
--- Seleccionar las peliculas cuya ganancia asociada sea mayor a el AVG de los pagos totales
-
--- Seleccionar los paises cuya cantidad de clientes sea inferior al AVG con respecto al total de clientes por pais
