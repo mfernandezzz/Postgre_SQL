@@ -335,3 +335,15 @@ LEFT JOIN payment
 ON rental.rental_id = payment.rental_id
 GROUP BY category
 ORDER BY amount DESC;
+
+-- Obtener las peliculas con la cantidad de rentas y lo recaudado para cada pelicula
+SELECT title AS title, COUNT(rental.rental_id) AS rentals, SUM(payment.amount) AS profit
+FROM film
+INNER JOIN inventory
+ON film.film_id = inventory.film_id
+LEFT JOIN rental
+ON inventory.inventory_id = rental.inventory_id
+LEFT JOIN payment
+ON rental.rental_id = payment.rental_id
+GROUP BY title
+ORDER BY profit DESC;
